@@ -32,6 +32,7 @@ namespace SlippingTip.Core
 
             Console.ForegroundColor = ConsoleColor.Green;
             Console.WriteLine(advice);
+            Console.WriteLine();
             Console.ForegroundColor = Settings.DefaultColor;
 
             callback?.Invoke();
@@ -45,10 +46,8 @@ namespace SlippingTip.Core
 
             if (response.IsSuccessStatusCode)
             {
-                // Read And Parse JSON
                 string responseBody = await response.Content.ReadAsStringAsync();
 
-                //Classic Deserialization
                 var jsonObj = JsonSerializer.Deserialize<Dictionary<string, TipObject>>(responseBody);
 
                 string? info = "Ответ на запрос получен!";

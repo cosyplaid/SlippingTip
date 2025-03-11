@@ -51,14 +51,14 @@ namespace SlippingTip.Input
                     Console.Write("Введите /tip, чтобы получить бесплатный совет: ");
                     str = Console.ReadLine();
                     if (!CheckCommands(str))
-                        Input(); //calc.InputOperator(str);
+                        Input();
                     break;
                 case States.WaitForAnswer:
                     str = Console.ReadLine();
                     Input();
                     break;
                 case States.ShowingResult:
-                    Console.WriteLine("Resulted");
+                    //Console.WriteLine("Resulted");
                     Program.CurrentState = States.WaitForCommands;
                     break;
                 case States.Settings:
@@ -114,12 +114,12 @@ namespace SlippingTip.Input
                 case "/cancel":
                     Console.WriteLine();
                     if (Program.CurrentState == States.Start) return false;
-                    if (Program.CurrentState == States.Settings) Program.CurrentState = Program.LastState;
+                    Program.CurrentState = Program.LastState;
                     return true;
                 case "/tip":
                     Console.WriteLine();
-                    if (Program.CurrentState == States.Start) return false;
-                    tipOperator.GetAdvice(() => { Program.CurrentState = States.ShowingResult; });
+                    if (Program.CurrentState != States.WaitForCommands) return false;
+                    tipOperator.GetAdvice(() => { Program.CurrentState = States.WaitForCommands; });
                     Program.CurrentState = States.WaitForAnswer;
                     return true;
                 case "/clear":
