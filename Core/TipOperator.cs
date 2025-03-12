@@ -42,30 +42,37 @@ namespace SlippingTip.Core
         {
             string url = "https://api.adviceslip.com/advice"; //API URL (GET)
 
-            var response = await client.GetAsync(url); //GET
-
-            if (response.IsSuccessStatusCode)
+            try
             {
-                string responseBody = await response.Content.ReadAsStringAsync();
+                var response = await client.GetAsync(url);
 
-                var jsonObj = JsonSerializer.Deserialize<Dictionary<string, TipObject>>(responseBody);
-
-                string? info = "Ответ на запрос получен!";
-
-                foreach (var kvp in jsonObj)
+                if (response.IsSuccessStatusCode)
                 {
-                    //JSON looks like {"slip": { "id": 10, "advice": "Some advice."}} || kvp.Key is key and = slip. 
-                    //_tip.id = kvp.Value.id;
-                    //_tip.advice = kvp.Value.advice;
+                    string responseBody = await response.Content.ReadAsStringAsync();
 
-                    info = FormAdvice(kvp.Value.id, kvp.Value.advice);
+                    var jsonObj = JsonSerializer.Deserialize<Dictionary<string, TipObject>>(responseBody);
+
+                    string? info = "";
+
+                    foreach (var kvp in jsonObj)
+                    {
+                        //JSON looks like {"slip": { "id": 10, "advice": "Some advice."}} || kvp.Key is key and = slip. 
+                        //_tip.id = kvp.Value.id;
+                        //_tip.advice = kvp.Value.advice;
+
+                        info = FormAdvice(kvp.Value.id, kvp.Value.advice);
+                    }
+
+                    return info;
                 }
-
-                return info;
+                else
+                {
+                    return string.Format($"Error: {response.StatusCode.ToString()}");
+                }
             }
-            else
+            catch (HttpRequestException e)
             {
-                return string.Format("Error: " + response.StatusCode.ToString());
+                return string.Format($"Error: {e.Message}");
             }
         }
 

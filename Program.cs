@@ -15,7 +15,7 @@ namespace SlippingTip
             set
             {
                 currentState = value;
-                Console.WriteLine("State is chagend to {0}", currentState);
+                //Console.WriteLine("State is changend to {0}", currentState);
                 stateUpdate?.Invoke();
             }
         }
